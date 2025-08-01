@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vanilla_state/cart_notifier.dart';
 import 'package:vanilla_state/cart_page.dart';
+import 'package:vanilla_state/cart_provider.dart';
 import 'package:vanilla_state/products_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -11,24 +12,20 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final CartNotifier _cartNotifier = CartNotifier();
-
   void openCart() => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => CartPage(
-            cartNotifier: _cartNotifier,
-          ),
+          builder: (context) => const CartPage(),
         ),
       );
 
-  @override 
+  @override
   Widget build(BuildContext context) {
+    final CartNotifier cartNotifier = CartProvider.of(context).cartNotifier;
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          ProductsPage(
-            cartNotifier: _cartNotifier,
-          ),
+          const ProductsPage(),
           Positioned(
             bottom: 50,
             right: 12,
@@ -53,7 +50,7 @@ class _MainPageState extends State<MainPage> {
                   Positioned(
                     right: 0,
                     child: ListenableBuilder(
-                      listenable: _cartNotifier,
+                      listenable: cartNotifier,
                       builder: (_, __) => Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
@@ -65,7 +62,7 @@ class _MainPageState extends State<MainPage> {
                           minHeight: 16,
                         ),
                         child: Text(
-                          "${_cartNotifier.cartCount}",
+                          "${cartNotifier.cartCount}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,

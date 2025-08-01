@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:vanilla_state/cart_list_item_view.dart';
 import 'package:vanilla_state/cart_notifier.dart';
+import 'package:vanilla_state/cart_provider.dart';
 
 class CartPage extends StatelessWidget {
-  final CartNotifier cartNotifier;
-
   const CartPage({
     super.key,
-    required this.cartNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
+    final CartNotifier cartNotifier = CartProvider.of(context).cartNotifier;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -22,10 +22,9 @@ class CartPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                    child: ListView.builder(
+                  child: ListView.builder(
                   itemCount: cartNotifier.items.length,
                   itemBuilder: (_, index) => CartListItemView(
-                    cartNotifier: cartNotifier,
                     item: cartNotifier.items.values.toList()[index],
                   ),
                 )),

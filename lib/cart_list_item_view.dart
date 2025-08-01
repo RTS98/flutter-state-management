@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:vanilla_state/cart_list_item.dart';
 import 'package:vanilla_state/cart_notifier.dart';
+import 'package:vanilla_state/cart_provider.dart';
 
 class CartListItemView extends StatelessWidget {
   final CartListItem item;
-  final CartNotifier cartNotifier;
 
   const CartListItemView({
     super.key,
     required this.item,
-    required this.cartNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
+    final CartNotifier cartNotifier = CartProvider.of(context).cartNotifier;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
