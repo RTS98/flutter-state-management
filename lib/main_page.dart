@@ -11,10 +11,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final Map<String, CartListItem> items = <String, CartListItem>{};
+  final ValueNotifier<Map<String, CartListItem>> items =
+      ValueNotifier<Map<String, CartListItem>>({});
 
   void addToCart(CartListItem item) => setState(() {
-        items.update(
+        items.value.update(
           item.product.id,
           (item) => CartListItem(
             product: item.product,
@@ -22,34 +23,39 @@ class _MainPageState extends State<MainPage> {
           ),
           ifAbsent: () => item,
         );
+
+        items.value = Map.from({...items.value});
       });
 
   void removeFromCart(CartListItem item) {
-    final cartItem = items[item.product.id];
+    final cartItem = items.value[item.product.id];
 
     if (cartItem == null) return;
 
     if (cartItem.quantity == 1) {
       return setState(() {
-        items.remove(cartItem.product.id);
+        items.value.remove(cartItem.product.id);
+        items.value = Map.from({...items.value});
       });
     }
 
     setState(() {
-      items.update(
+      items.value.update(
         item.product.id,
         (item) => CartListItem(
           product: item.product,
           quantity: item.quantity - 1,
         ),
       );
+
+      items.value = Map.from({...items.value});
     });
   }
 
   void openCart() => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CartPage(
-            items: items.values.toList(),
+            items: items,
             onAddToCart: addToCart,
             onRemoveFromCart: removeFromCart,
           ),
@@ -58,7 +64,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cartCount = items.entries.fold(
+    final cartCount = items.value.entries.fold(
       0,
       (int count, item) => count + item.value.quantity,
     );
