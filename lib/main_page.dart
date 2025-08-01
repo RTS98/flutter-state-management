@@ -13,19 +13,22 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final ValueNotifier<Map<String, CartListItem>> items =
       ValueNotifier<Map<String, CartListItem>>({});
+  final ValueNotifier<int> cartCount = ValueNotifier(0);
 
-  void addToCart(CartListItem item) => setState(() {
-        items.value.update(
-          item.product.id,
-          (item) => CartListItem(
-            product: item.product,
-            quantity: item.quantity + 1,
-          ),
-          ifAbsent: () => item,
-        );
+  void addToCart(CartListItem item) {
+    items.value.update(
+      item.product.id,
+      (item) => CartListItem(
+        product: item.product,
+        quantity: item.quantity + 1,
+      ),
+      ifAbsent: () => item,
+    );
 
-        items.value = Map.from({...items.value});
-      });
+    items.value = Map.from({...items.value});
+
+    _calculatateCartCount();
+  }
 
   void removeFromCart(CartListItem item) {
     final cartItem = items.value[item.product.id];
@@ -33,13 +36,9 @@ class _MainPageState extends State<MainPage> {
     if (cartItem == null) return;
 
     if (cartItem.quantity == 1) {
-      return setState(() {
-        items.value.remove(cartItem.product.id);
-        items.value = Map.from({...items.value});
-      });
-    }
-
-    setState(() {
+      items.value.remove(cartItem.product.id);
+      items.value = Map.from({...items.value});
+    } else {
       items.value.update(
         item.product.id,
         (item) => CartListItem(
@@ -49,8 +48,15 @@ class _MainPageState extends State<MainPage> {
       );
 
       items.value = Map.from({...items.value});
-    });
+    }
+
+    _calculatateCartCount();
   }
+
+  void _calculatateCartCount() => cartCount.value = items.value.entries.fold(
+        0,
+        (int count, item) => count + item.value.quantity,
+      );
 
   void openCart() => Navigator.of(context).push(
         MaterialPageRoute(
@@ -64,11 +70,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cartCount = items.value.entries.fold(
-      0,
-      (int count, item) => count + item.value.quantity,
-    );
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -96,24 +97,27 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Positioned(
                     right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.pink[500],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        "$cartCount",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          decorationThickness: 0,
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: cartCount,
+                      builder: (_, count, __) => Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.pink[500],
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        textAlign: TextAlign.center,
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          "$count",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            decorationThickness: 0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
