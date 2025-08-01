@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:vanilla_state/cart_list_item.dart';
+import 'package:vanilla_state/cart_notifier.dart';
 import 'package:vanilla_state/product_list_item.dart';
 
 class ProductListItemView extends StatelessWidget {
   final ProductListItem productItem;
-  final Function(CartListItem) onAddToCart;
+  final CartNotifier cartNotifier;
 
   const ProductListItemView({
     super.key,
     required this.productItem,
-    required this.onAddToCart,
+    required this.cartNotifier,
   });
 
   @override
@@ -24,7 +25,7 @@ class ProductListItemView extends StatelessWidget {
         title: Text(productItem.name),
         subtitle: Text(productItem.description),
         trailing: ElevatedButton(
-          onPressed: () => onAddToCart(
+          onPressed: () => cartNotifier.addToCart(
             CartListItem(
               product: productItem,
               quantity: 1,

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:vanilla_state/cart_list_item.dart';
+import 'package:vanilla_state/cart_notifier.dart';
 
 class CartListItemView extends StatelessWidget {
   final CartListItem item;
-  final Function(CartListItem) onAddToCart;
-  final Function(CartListItem) onRemoveFromCart;
+  final CartNotifier cartNotifier;
 
   const CartListItemView({
     super.key,
     required this.item,
-    required this.onAddToCart,
-    required this.onRemoveFromCart,
+    required this.cartNotifier,
   });
 
   @override
@@ -28,7 +27,7 @@ class CartListItemView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () => onAddToCart(
+              onPressed: () => cartNotifier.addToCart(
                 CartListItem(
                   product: item.product,
                   quantity: 1,
@@ -38,7 +37,7 @@ class CartListItemView extends StatelessWidget {
             ),
             const SizedBox(width: 15),
             ElevatedButton(
-              onPressed: () => onRemoveFromCart(item),
+              onPressed: () => cartNotifier.removeFromCart(item),
               child: const Icon(Icons.remove),
             ),
           ],

@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/cart_list_item.dart';
+import 'package:vanilla_state/cart_notifier.dart';
 import 'package:vanilla_state/product_list_item_view.dart';
 import 'package:vanilla_state/products.dart';
 
-class ProductsPage extends StatefulWidget {
-  final Function(CartListItem) onAddToCart;
+class ProductsPage extends StatelessWidget {
+  final CartNotifier cartNotifier;
 
   const ProductsPage({
     super.key,
-    required this.onAddToCart,
+    required this.cartNotifier,
   });
 
-  @override
-  State<StatefulWidget> createState() => _ProductsPageState();
-}
-
-class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +19,7 @@ class _ProductsPageState extends State<ProductsPage> {
         child: ListView.builder(
           itemCount: products.length,
           itemBuilder: (_, index) => ProductListItemView(
-            onAddToCart: widget.onAddToCart,
+            cartNotifier: cartNotifier,
             productItem: products[index],
           ),
         ),

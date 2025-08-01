@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/cart_list_item.dart';
+import 'package:vanilla_state/cart_notifier.dart';
 import 'package:vanilla_state/cart_page.dart';
 import 'package:vanilla_state/products_page.dart';
 
@@ -11,59 +11,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final ValueNotifier<Map<String, CartListItem>> items =
-      ValueNotifier<Map<String, CartListItem>>({});
-  final ValueNotifier<int> cartCount = ValueNotifier(0);
-
-  void addToCart(CartListItem item) {
-    items.value.update(
-      item.product.id,
-      (item) => CartListItem(
-        product: item.product,
-        quantity: item.quantity + 1,
-      ),
-      ifAbsent: () => item,
-    );
-
-    items.value = Map.from({...items.value});
-
-    _calculatateCartCount();
-  }
-
-  void removeFromCart(CartListItem item) {
-    final cartItem = items.value[item.product.id];
-
-    if (cartItem == null) return;
-
-    if (cartItem.quantity == 1) {
-      items.value.remove(cartItem.product.id);
-      items.value = Map.from({...items.value});
-    } else {
-      items.value.update(
-        item.product.id,
-        (item) => CartListItem(
-          product: item.product,
-          quantity: item.quantity - 1,
-        ),
-      );
-
-      items.value = Map.from({...items.value});
-    }
-
-    _calculatateCartCount();
-  }
-
-  void _calculatateCartCount() => cartCount.value = items.value.entries.fold(
-        0,
-        (int count, item) => count + item.value.quantity,
-      );
+  final CartNotifier _cartNotifier = CartNotifier();
 
   void openCart() => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CartPage(
-            items: items,
-            onAddToCart: addToCart,
-            onRemoveFromCart: removeFromCart,
+            cartNotifier: _cartNotifier,
           ),
         ),
       );
@@ -73,7 +26,9 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          ProductsPage(onAddToCart: addToCart),
+          ProductsPage(
+            cartNotifier: _cartNotifier,
+          ),
           Positioned(
             bottom: 50,
             right: 12,
@@ -97,9 +52,9 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Positioned(
                     right: 0,
-                    child: ValueListenableBuilder<int>(
-                      valueListenable: cartCount,
-                      builder: (_, count, __) => Container(
+                    child: ListenableBuilder(
+                      listenable: _cartNotifier,
+                      builder: (_, __) => Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           color: Colors.pink[500],
@@ -110,7 +65,7 @@ class _MainPageState extends State<MainPage> {
                           minHeight: 16,
                         ),
                         child: Text(
-                          "$count",
+                          "${_cartNotifier.cartCount}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
