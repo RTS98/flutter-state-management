@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
         ),
       );
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -70,6 +70,7 @@ class _MainPageState extends State<MainPage> {
                             color: Colors.white,
                             fontSize: 10,
                             decorationThickness: 0,
+                            decoration: TextDecoration.none,
                           ),
                           textAlign: TextAlign.center,
                         ),

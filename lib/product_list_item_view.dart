@@ -22,8 +22,18 @@ class ProductListItemView extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListTile(
-        title: Text(productItem.name),
-        subtitle: Text(productItem.description),
+        title: Text(
+          productItem.name,
+          style: const TextStyle(
+            decoration: TextDecoration.none,
+          ),
+        ),
+        subtitle: Text(
+          productItem.description,
+          style: const TextStyle(
+            decoration: TextDecoration.none,
+          ),
+        ),
         trailing: ElevatedButton(
           onPressed: () => cartNotifier.addToCart(
             CartListItem(
