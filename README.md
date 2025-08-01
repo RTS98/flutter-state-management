@@ -16,6 +16,8 @@ This approach is generraly considered a bad practice for the following reasons:
 - **Testability:** Having a shared state makes the tests dependent on each other which leads to unstable tests.
 
 The solution is **lifting state up**, a common pattern for dealing with shared data.
+A downsinde of this patters is that requires sending down data and methods creating tightly coupled widgets. This downside is callde **prop drilling** or **callback hell**.
+If there is more than one level of hierarchy then there might be cases where we need to send those methods to the deepest level.
 Main Page is the chosen parent for both pages and it's role is store the date adn to define the ways to manipulate the data by passing down the methods.
 Since Cart Page is also managing the state it has a copy of the products list and propagate changes back to parent via callback.
 Immutability is followed by creating a new instance every time instead of modifiying the existing objects.
