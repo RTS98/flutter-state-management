@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/cart_notifier.dart';
+import 'package:vanilla_state/cart_view_model.dart';
 import 'package:vanilla_state/cart_page.dart';
 import 'package:vanilla_state/cart_provider.dart';
 import 'package:vanilla_state/products_page.dart';
@@ -20,7 +20,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final CartNotifier cartNotifier = CartProvider.of(context).cartNotifier;
+    final CartViewModel cartViewModel = CartProvider.of(context).cartViewModel;
 
     return Scaffold(
       body: Stack(
@@ -50,7 +50,7 @@ class _MainPageState extends State<MainPage> {
                   Positioned(
                     right: 0,
                     child: ListenableBuilder(
-                      listenable: cartNotifier,
+                      listenable: cartViewModel,
                       builder: (_, __) => Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
@@ -62,7 +62,7 @@ class _MainPageState extends State<MainPage> {
                           minHeight: 16,
                         ),
                         child: Text(
-                          "${cartNotifier.cartCount}",
+                          "${cartViewModel.state.cartCount}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,

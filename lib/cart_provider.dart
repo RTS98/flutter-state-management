@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/cart_notifier.dart';
+import 'package:vanilla_state/cart_view_model.dart';
 
 class CartProvider extends InheritedWidget {
-  final CartNotifier cartNotifier;
+  final CartViewModel cartViewModel;
 
   const CartProvider({
     super.key,
     required super.child,
-    required this.cartNotifier,
+    required this.cartViewModel,
   });
 
   static CartProvider? maybeOf(BuildContext context) {
@@ -24,6 +24,6 @@ class CartProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant CartProvider oldWidget) {
-    return cartNotifier != oldWidget.cartNotifier;
+    return cartViewModel != oldWidget.cartViewModel;
   }
 }

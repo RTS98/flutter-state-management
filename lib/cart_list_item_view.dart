@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vanilla_state/cart_list_item.dart';
-import 'package:vanilla_state/cart_notifier.dart';
+import 'package:vanilla_state/cart_view_model.dart';
 import 'package:vanilla_state/cart_provider.dart';
 
 class CartListItemView extends StatelessWidget {
@@ -13,7 +13,7 @@ class CartListItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CartNotifier cartNotifier = CartProvider.of(context).cartNotifier;
+    final CartViewModel cartViewModel = CartProvider.of(context).cartViewModel;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -28,17 +28,12 @@ class CartListItemView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () => cartNotifier.addToCart(
-                CartListItem(
-                  product: item.product,
-                  quantity: 1,
-                ),
-              ),
+              onPressed: () => cartViewModel.addToCart(item.product),
               child: const Icon(Icons.add),
             ),
             const SizedBox(width: 15),
             ElevatedButton(
-              onPressed: () => cartNotifier.removeFromCart(item),
+              onPressed: () => cartViewModel.removeFromCart(item),
               child: const Icon(Icons.remove),
             ),
           ],
