@@ -1,7 +1,7 @@
 import 'package:vanilla_state/cart_list_item.dart';
 
 class CartInfo {
-  final Map<String, CartListItem> items;
+  final List<CartListItem> items;
   final int totalPrice;
   final int cartCount;
 

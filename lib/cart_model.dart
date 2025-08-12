@@ -11,7 +11,8 @@ class CartModel {
 
   Stream<CartInfo> get stream => _stream.stream;
 
-  void addToCart(ProductListItem item) {
+  Future<void> addToCart(ProductListItem item) async {
+    await Future.delayed(const Duration(seconds: 3));
     _items.update(
       item.id,
       (item) => CartListItem(
@@ -27,7 +28,8 @@ class CartModel {
     _addEventToStream();
   }
 
-  void removeFromCart(CartListItem item) {
+  Future<void> removeFromCart(CartListItem item) async {
+    await Future.delayed(const Duration(seconds: 3));
     final cartItem = _items[item.product.id];
 
     if (cartItem == null) return;
@@ -51,7 +53,7 @@ class CartModel {
 
   void _addEventToStream() => _stream.add(
         CartInfo(
-          items: _items,
+          items: _items.values.toList(),
           totalPrice: _calculateTotalPrice(),
           cartCount: _calculatateCartCount(),
         ),
