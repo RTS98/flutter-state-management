@@ -28,30 +28,35 @@ class CartViewModel extends ChangeNotifier {
   }
 
   Future<void> addToCart(ProductListItem item) async {
-    _state.copyWith(isProcessing: true);
+    _state = _state.copyWith(isProcessing: true);
     notifyListeners();
 
     try {
       await _cartModel.addToCart(item);
-      _state.copyWith(isProcessing: false);
+      _state = _state.copyWith(isProcessing: false);
     } on Exception catch (e) {
-      _state.copyWith(error: e);
+      _state = _state.copyWith(error: e, isProcessing: false);
     }
 
     notifyListeners();
   }
 
   Future<void> removeFromCart(CartListItem item) async {
-    _state.copyWith(isProcessing: true);
+    _state = _state.copyWith(isProcessing: true);
     notifyListeners();
 
     try {
       await _cartModel.removeFromCart(item);
-      _state.copyWith(isProcessing: false);
+      _state = _state.copyWith(isProcessing: false);
     } on Exception catch (e) {
-      _state.copyWith(error: e);
+      _state = _state.copyWith(error: e, isProcessing: false);
     }
 
+    notifyListeners();
+  }
+
+  void clearError() {
+    _state = _state.copyWith(error: null);
     notifyListeners();
   }
 }

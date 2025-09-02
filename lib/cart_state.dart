@@ -26,8 +26,8 @@ class CartState {
       items: items ?? this.items,
       totalPrice: totalPrice ?? this.totalPrice,
       cartCount: cartCount ?? this.cartCount,
-      isProcessing: isProcessing ?? this.isProcessing,
-      error: error ?? this.error,
+      isProcessing: isProcessing,
+      error: error,
     );
   }
 }

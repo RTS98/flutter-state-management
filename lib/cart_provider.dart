@@ -17,9 +17,19 @@ class CartProvider extends InheritedWidget {
   static CartProvider of(BuildContext context) {
     final CartProvider? result = maybeOf(context);
 
-    assert(result != null, "No CartNotifier was found in context");
+    assert(result != null, "No CartProvider was found in context");
 
     return result!;
+  }
+
+  static CartViewModel read(BuildContext context) {
+    final provider = context.getInheritedWidgetOfExactType<CartProvider>();
+
+    if (provider == null) {
+      throw Exception('No CartProvider found in context');
+    }
+
+    return provider.cartViewModel;
   }
 
   @override

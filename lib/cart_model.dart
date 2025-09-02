@@ -13,6 +13,8 @@ class CartModel {
 
   Future<void> addToCart(ProductListItem item) async {
     await Future.delayed(const Duration(seconds: 3));
+    // Used the line below to simulate the execption case
+    // throw Exception("Failed to add to cart");
     _items.update(
       item.id,
       (item) => CartListItem(
@@ -30,6 +32,8 @@ class CartModel {
 
   Future<void> removeFromCart(CartListItem item) async {
     await Future.delayed(const Duration(seconds: 3));
+    // Used the line below to simulate the execption case
+    // throw Exception("Failed to remove from cart");
     final cartItem = _items[item.product.id];
 
     if (cartItem == null) return;
