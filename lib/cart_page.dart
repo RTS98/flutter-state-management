@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_list_item_view.dart';
-import 'package:vanilla_state/cart_provider.dart';
-import 'package:vanilla_state/cart_view_model.dart';
+import 'package:vanilla_state/cart_state.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({
@@ -13,17 +14,28 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  late final CartViewModel _cartViewModel;
+  late final CartCubit _cartCubit;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: ListenableBuilder(
-          listenable: _cartViewModel,
-          builder: (_, __) {
-            if (_cartViewModel.state.isProcessing == true) {
+        child: BlocConsumer<CartCubit, CartState>(
+          listener: (_, state) {
+            if (state.error != null) {
+              final errorMessage = state.error.toString();
+
+              _cartCubit.clearError();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(errorMessage),
+                ),
+              );
+            }
+          },
+          builder: (_, state) {
+            if (state.isProcessing == true) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -34,9 +46,9 @@ class _CartPageState extends State<CartPage> {
               children: <Widget>[
                 Expanded(
                   child: ListView.builder(
-                    itemCount: _cartViewModel.state.items.length,
+                    itemCount: state.items.length,
                     itemBuilder: (_, index) => CartListItemView(
-                      item: _cartViewModel.state.items[index],
+                      item: state.items[index],
                     ),
                   ),
                 ),
@@ -51,7 +63,7 @@ class _CartPageState extends State<CartPage> {
                     children: <Widget>[
                       const Text("Total Price:"),
                       const SizedBox(width: 5),
-                      Text("${_cartViewModel.state.totalPrice}\$")
+                      Text("${state.totalPrice}\$")
                     ],
                   ),
                 )
@@ -65,27 +77,13 @@ class _CartPageState extends State<CartPage> {
 
   @override
   void dispose() {
-    _cartViewModel.dispose();
+    _cartCubit.close();
     super.dispose();
   }
 
   @override
   void initState() {
-    _cartViewModel = CartProvider.read(context);
-    _cartViewModel.addListener(_onCartViewModelStateChanged);
+    _cartCubit = context.read<CartCubit>();
     super.initState();
-  }
-
-  void _onCartViewModelStateChanged() {
-    if (_cartViewModel.state.error != null) {
-      final errorMessage = _cartViewModel.state.error.toString();
-
-      _cartViewModel.clearError();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-        ),
-      );
-    }
   }
 }

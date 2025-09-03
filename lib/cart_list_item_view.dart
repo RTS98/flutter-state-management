@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_list_item.dart';
-import 'package:vanilla_state/cart_view_model.dart';
-import 'package:vanilla_state/cart_provider.dart';
 
 class CartListItemView extends StatelessWidget {
   final CartListItem item;
@@ -13,8 +13,6 @@ class CartListItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CartViewModel cartViewModel = CartProvider.of(context).cartViewModel;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
@@ -28,12 +26,13 @@ class CartListItemView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () => cartViewModel.addToCart(item.product),
+              onPressed: () =>
+                  context.read<CartCubit>().addToCart(item.product),
               child: const Icon(Icons.add),
             ),
             const SizedBox(width: 15),
             ElevatedButton(
-              onPressed: () => cartViewModel.removeFromCart(item),
+              onPressed: () => context.read<CartCubit>().removeFromCart(item),
               child: const Icon(Icons.remove),
             ),
           ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/cart_view_model.dart';
-import 'package:vanilla_state/cart_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/product_list_item.dart';
 
 class ProductListItemView extends StatelessWidget {
@@ -13,8 +13,6 @@ class ProductListItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CartViewModel cartViewModel = CartProvider.of(context).cartViewModel;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
@@ -35,7 +33,7 @@ class ProductListItemView extends StatelessWidget {
           ),
         ),
         trailing: ElevatedButton(
-          onPressed: () => cartViewModel.addToCart(productItem),
+          onPressed: () => context.read<CartCubit>().addToCart(productItem),
           child: const Icon(Icons.add),
         ),
       ),

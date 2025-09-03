@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_page.dart';
-import 'package:vanilla_state/cart_provider.dart';
-import 'package:vanilla_state/cart_view_model.dart';
+import 'package:vanilla_state/cart_state.dart';
 import 'package:vanilla_state/products_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -12,15 +13,26 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late final CartViewModel _cartViewModel;
+  late final CartCubit _cartCubit;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListenableBuilder(
-        listenable: _cartViewModel,
-        builder: (_, __) {
-          if (_cartViewModel.state.isProcessing == true) {
+      body: BlocConsumer<CartCubit, CartState>(
+        listener: (_, state) {
+          if (state.error != null) {
+            final errorMessage = state.error.toString();
+
+            _cartCubit.clearError();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(errorMessage),
+              ),
+            );
+          }
+        },
+        builder: (_, state) {
+          if (state.isProcessing == true) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -63,7 +75,7 @@ class _MainPageState extends State<MainPage> {
                             minHeight: 16,
                           ),
                           child: Text(
-                            "${_cartViewModel.state.cartCount}",
+                            "${state.cartCount}",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -87,14 +99,13 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() {
-    _cartViewModel.dispose();
+    _cartCubit.close();
     super.dispose();
   }
 
   @override
   void initState() {
-    _cartViewModel = CartProvider.read(context);
-    _cartViewModel.addListener(_onCartViewModelStateChanged);
+    _cartCubit = context.read<CartCubit>();
     super.initState();
   }
 
@@ -103,17 +114,4 @@ class _MainPageState extends State<MainPage> {
           builder: (context) => const CartPage(),
         ),
       );
-
-  void _onCartViewModelStateChanged() {
-    if (_cartViewModel.state.error != null) {
-      final errorMessage = _cartViewModel.state.error.toString();
-
-      _cartViewModel.clearError();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-        ),
-      );
-    }
-  }
 }
