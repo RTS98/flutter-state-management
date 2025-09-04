@@ -1,3 +1,5 @@
+import 'package:hive/hive.dart';
+import 'package:vanilla_state/hive_service.dart';
 import 'package:vanilla_state/product.dart';
 import 'package:vanilla_state/products_api_service.dart';
 
@@ -5,13 +7,45 @@ abstract interface class ProductRepository {
   Future<Iterable<Product>> fetchProducts();
 }
 
-class ProductRepositoryImpl implements ProductRepository {
+class ProductRepositoryImpl extends ProductRepository {
+  final RemoteProductRepository _remoteProductRepository =
+      RemoteProductRepository();
+  final LocalProductRepository _localProductRepository =
+      LocalProductRepository();
+
+  @override
+  Future<Iterable<Product>> fetchProducts() async {
+    final localProducts = await _localProductRepository.fetchProducts();
+
+    if (localProducts.isNotEmpty) {
+      return localProducts;
+    }
+
+    final products = await _remoteProductRepository.fetchProducts();
+
+    await _localProductRepository.addProducts(products);
+
+    return products;
+  }
+}
+
+class RemoteProductRepository implements ProductRepository {
   final _productsApiService = ProductsApiService();
 
   @override
   Future<Iterable<Product>> fetchProducts() async {
-    await Future.delayed(const Duration(seconds: 2));
-
     return _productsApiService.fetchProducts();
   }
+}
+
+class LocalProductRepository implements ProductRepository {
+  final Box<Product> _productBox = HiveService().getProductBox();
+
+  @override
+  Future<Iterable<Product>> fetchProducts() async {
+    return _productBox.values.toList();
+  }
+
+  Future<void> addProducts(Iterable<Product> products) async =>
+      _productBox.addAll(products);
 }
