@@ -6,10 +6,12 @@ import 'package:vanilla_state/cart_state.dart';
 import 'package:vanilla_state/product.dart';
 
 class CartCubit extends Cubit<CartState> {
-  final CartModel _cartModel = CartModel();
+  final CartModel _cartModel;
 
-  CartCubit()
-      : super(
+  CartCubit({
+    required CartModel cartModel,
+  })  : _cartModel = cartModel,
+        super(
           CartState(
             items: [],
             totalPrice: 0,

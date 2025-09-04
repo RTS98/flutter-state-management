@@ -3,10 +3,12 @@ import 'package:vanilla_state/product_repository.dart';
 import 'package:vanilla_state/product_state.dart';
 
 class ProductCubit extends Cubit<ProductState> {
-  final ProductRepository _productRepository = ProductRepositoryImpl();
+  final ProductRepository _productRepository;
 
-  ProductCubit()
-      : super(
+  ProductCubit({
+    required ProductRepository productRepository,
+  })  : _productRepository = productRepository,
+        super(
           ProductState(
             products: [],
             isProcessing: false,
