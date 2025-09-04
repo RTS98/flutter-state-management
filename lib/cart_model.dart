@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:vanilla_state/cart_info.dart';
 import 'package:vanilla_state/cart_list_item.dart';
-import 'package:vanilla_state/product_list_item.dart';
+import 'package:vanilla_state/product.dart';
 
 class CartModel {
   final Map<String, CartListItem> _items = <String, CartListItem>{};
@@ -11,7 +11,7 @@ class CartModel {
 
   Stream<CartInfo> get stream => _stream.stream;
 
-  Future<void> addToCart(ProductListItem item) async {
+  Future<void> addToCart(Product item) async {
     await Future.delayed(const Duration(seconds: 3));
     // Used the line below to simulate the execption case
     // throw Exception("Failed to add to cart");

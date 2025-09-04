@@ -1,7 +1,7 @@
-import 'package:vanilla_state/product_list_item.dart';
+import 'package:vanilla_state/product.dart';
 
 class CartListItem {
-  final ProductListItem product;
+  final Product product;
   final int quantity;
 
   CartListItem({

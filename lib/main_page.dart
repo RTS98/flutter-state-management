@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_page.dart';
-import 'package:vanilla_state/cart_state.dart';
+import 'package:vanilla_state/product_cubit.dart';
+import 'package:vanilla_state/product_state.dart';
 import 'package:vanilla_state/products_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -18,10 +19,10 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<CartCubit, CartState>(
+      body: BlocConsumer<ProductCubit, ProductState>(
         listener: (_, state) {
-          if (state.error != null) {
-            final errorMessage = state.error.toString();
+          if (state.exception != null) {
+            final errorMessage = state.exception.toString();
 
             _cartCubit.clearError();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +41,9 @@ class _MainPageState extends State<MainPage> {
 
           return Stack(
             children: <Widget>[
-              const ProductsPage(),
+              ProductsPage(
+                products: state.products,
+              ),
               Positioned(
                 bottom: 50,
                 right: 12,

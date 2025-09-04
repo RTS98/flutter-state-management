@@ -3,7 +3,7 @@ import 'package:vanilla_state/cart_info.dart';
 import 'package:vanilla_state/cart_list_item.dart';
 import 'package:vanilla_state/cart_model.dart';
 import 'package:vanilla_state/cart_state.dart';
-import 'package:vanilla_state/product_list_item.dart';
+import 'package:vanilla_state/product.dart';
 
 class CartCubit extends Cubit<CartState> {
   final CartModel _cartModel = CartModel();
@@ -29,7 +29,7 @@ class CartCubit extends Cubit<CartState> {
     );
   }
 
-  Future<void> addToCart(ProductListItem item) async {
+  Future<void> addToCart(Product item) async {
     emit(state.copyWith(isProcessing: true));
 
     try {
