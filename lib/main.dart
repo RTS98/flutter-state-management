@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_model.dart';
 import 'package:vanilla_state/firebase_options.dart';
-import 'package:vanilla_state/hive_service.dart';
 import 'package:vanilla_state/main_page.dart';
 import 'package:vanilla_state/product_cubit.dart';
 import 'package:vanilla_state/product_repository.dart';
@@ -12,8 +11,7 @@ import 'package:vanilla_state/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
-  await HiveService().initializeHive();
+  await setupLocator();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

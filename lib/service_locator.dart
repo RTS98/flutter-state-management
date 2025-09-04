@@ -7,16 +7,24 @@ import 'package:vanilla_state/products_api_service.dart';
 
 final GetIt getIt = GetIt.instance;
 
-void setupLocator() {
-  getIt.registerLazySingleton<ProductRepository>(
-    () => ProductRepositoryImpl(
-      remoteProductRepository: RemoteProductRepository(
-        productsApiService: ProductsApiService(),
-      ),
-      localProductRepository:
-          LocalProductRepository(productBox: HiveService().getProductBox()),
-    ),
+Future<void> setupLocator() async {
+  getIt.registerSingletonAsync<ProductRepository>(
+    () async {
+      final HiveService hiveService = HiveService();
+      await hiveService.initializeHive();
+
+      return ProductRepositoryImpl(
+        remoteProductRepository: RemoteProductRepository(
+          productsApiService: ProductsApiService(),
+        ),
+        localProductRepository: LocalProductRepository(
+          productBox: hiveService.getProductBox(),
+        ),
+      );
+    },
   );
 
   getIt.registerLazySingleton<CartModel>(() => CartModel());
+
+  await getIt.allReady();
 }
