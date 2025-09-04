@@ -75,11 +75,11 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  @override
-  void dispose() {
-    _cartCubit.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _cartCubit.close();
+  //   super.dispose();
+  // }
 
   @override
   void initState() {
