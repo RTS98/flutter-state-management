@@ -14,9 +14,7 @@ class ProductCubit extends Cubit<ProductState> {
             isProcessing: false,
             cartCount: 0,
           ),
-        ) {
-    fetchProducts();
-  }
+        );
 
   Future<void> fetchProducts() async {
     emit(state.copyWith(isProcessing: true));

@@ -27,7 +27,7 @@ void main() async {
         BlocProvider<ProductCubit>(
           create: (_) => ProductCubit(
             productRepository: getIt.get<ProductRepository>(),
-          ),
+          )..fetchProducts(),
         ),
       ],
       child: const MaterialApp(
