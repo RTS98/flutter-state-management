@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_page.dart';
 import 'package:vanilla_state/cart_state.dart';
-import 'package:vanilla_state/product_cubit.dart';
-import 'package:vanilla_state/product_state.dart';
-import 'package:vanilla_state/products_page.dart';
+import 'package:vanilla_state/product/presentation/bloc/product_cubit.dart';
+import 'package:vanilla_state/product/presentation/bloc/product_state.dart';
+import 'package:vanilla_state/product/presentation/views/products_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

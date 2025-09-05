@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanilla_state/cart_cubit.dart';
-import 'package:vanilla_state/product.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
 
 
 class ProductListItemView extends StatelessWidget {

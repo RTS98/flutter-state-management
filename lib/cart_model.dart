@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:vanilla_state/cart_info.dart';
 import 'package:vanilla_state/cart_list_item.dart';
-import 'package:vanilla_state/product.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
 
 class CartModel {
   final Map<String, CartListItem> _items = <String, CartListItem>{};

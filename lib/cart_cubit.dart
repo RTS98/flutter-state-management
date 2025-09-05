@@ -3,7 +3,7 @@ import 'package:vanilla_state/cart_info.dart';
 import 'package:vanilla_state/cart_list_item.dart';
 import 'package:vanilla_state/cart_model.dart';
 import 'package:vanilla_state/cart_state.dart';
-import 'package:vanilla_state/product.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
 
 class CartCubit extends Cubit<CartState> {
   final CartModel _cartModel;

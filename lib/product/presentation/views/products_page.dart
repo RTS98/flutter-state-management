@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/product.dart';
-import 'package:vanilla_state/product_list_item_view.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
+import 'package:vanilla_state/product/presentation/widgets/product_list_item_view.dart';
 
 class ProductsPage extends StatelessWidget {
   final Iterable<Product> products;

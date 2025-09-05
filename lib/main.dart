@@ -5,8 +5,8 @@ import 'package:vanilla_state/cart_cubit.dart';
 import 'package:vanilla_state/cart_model.dart';
 import 'package:vanilla_state/firebase_options.dart';
 import 'package:vanilla_state/main_page.dart';
-import 'package:vanilla_state/product_cubit.dart';
-import 'package:vanilla_state/product_repository.dart';
+import 'package:vanilla_state/product/domain/repository/product_repository.dart';
+import 'package:vanilla_state/product/presentation/bloc/product_cubit.dart';
 import 'package:vanilla_state/service_locator.dart';
 
 void main() async {

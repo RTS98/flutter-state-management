@@ -1,4 +1,4 @@
-import 'package:vanilla_state/product.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
 
 class CartListItem {
   final Product product;
