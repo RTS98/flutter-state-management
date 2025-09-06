@@ -1,4 +1,4 @@
-import 'package:vanilla_state/cart_list_item.dart';
+import 'package:vanilla_state/cart/domain/models/cart_list_item.dart';
 
 class CartState {
   final List<CartListItem> items;

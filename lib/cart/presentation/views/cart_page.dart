@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vanilla_state/cart_cubit.dart';
-import 'package:vanilla_state/cart_list_item_view.dart';
-import 'package:vanilla_state/cart_state.dart';
+import 'package:vanilla_state/cart/presentation/bloc/cart_cubit.dart';
+import 'package:vanilla_state/cart/presentation/widgets/cart_list_item_view.dart';
+import 'package:vanilla_state/cart/presentation/bloc/cart_state.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({

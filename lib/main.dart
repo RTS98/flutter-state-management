@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vanilla_state/cart_cubit.dart';
-import 'package:vanilla_state/cart_model.dart';
+import 'package:vanilla_state/cart/domain/repository/cart_repository.dart';
+import 'package:vanilla_state/cart/presentation/bloc/cart_cubit.dart';
 import 'package:vanilla_state/firebase_options.dart';
 import 'package:vanilla_state/main_page.dart';
 import 'package:vanilla_state/product/domain/repository/product_repository.dart';
@@ -15,13 +15,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<CartCubit>(
           create: (_) => CartCubit(
-            cartModel: getIt.get<CartModel>(),
+            cartModel: getIt.get<CartRepository>(),
           ),
         ),
         BlocProvider<ProductCubit>(
