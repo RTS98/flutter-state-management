@@ -22,7 +22,7 @@ void main() async {
         BlocProvider<CartCubit>(
           create: (_) => CartCubit(
             cartModel: getIt.get<CartRepository>(),
-          ),
+          )..fetchCartItems(),
         ),
         BlocProvider<ProductCubit>(
           create: (_) => ProductCubit(

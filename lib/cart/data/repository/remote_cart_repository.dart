@@ -16,17 +16,20 @@ class RemoteCartRepositoryImpl implements CartRepository {
   }) : _cartApiService = cartApiService;
 
   @override
+  Stream<CartInfo> get stream => _stream.stream;
+
+  @override
   Future<void> addToCart(Product product) {
     return _cartApiService.addToCart(product);
   }
 
   @override
-  Future<void> removeFromCart(CartListItem item) {
-    // TODO: implement removeFromCart
-    throw UnimplementedError();
+  Future<Iterable<CartListItem>> fetchCartItems() {
+    return _cartApiService.fetchCartItems();
   }
 
   @override
-  // TODO: implement stream
-  Stream<CartInfo> get stream => _stream.stream;
+  Future<void> removeFromCart(CartListItem item) {
+    return _cartApiService.removeFromCart(item.product);
+  }
 }

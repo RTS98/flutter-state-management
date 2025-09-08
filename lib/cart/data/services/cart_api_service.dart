@@ -7,19 +7,17 @@ class CartApiService {
     try {
       final cartItems =
           await FirebaseFirestore.instance.collection("cart").get();
-      return cartItems.docs
-          .map(
-            (element) => CartListItem(
-              product: Product(
-                id: element['id'],
-                name: element['name'],
-                description: element['description'],
-                price: element['price'],
-              ),
-              quantity: element['quantity'],
-            ),
-          )
-          .toList();
+      return cartItems.docs.map(
+        (element) => CartListItem(
+          product: Product(
+            id: element.id,
+            name: element['name'],
+            description: element['description'],
+            price: element['price'],
+          ),
+          quantity: element['quantity'],
+        ),
+      );
     } on Error catch (e) {
       print(e.toString());
       return [];
@@ -37,30 +35,30 @@ class CartApiService {
         },
         SetOptions(merge: true),
       );
-    } on Error catch (e) {
+    } on Exception catch (e) {
       print(e.toString());
     }
   }
 
   Future<void> removeFromCart(Product product) async {
-    final docRef =
-        FirebaseFirestore.instance.collection("cart").doc(product.id);
-
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final docRef =
+            FirebaseFirestore.instance.collection("cart").doc(product.id);
         final doc = await transaction.get(docRef);
 
         if (doc.data()?['quantity'] == 1) {
-          return docRef.delete();
+          return transaction.delete(docRef);
         }
 
-        await docRef.update(
+        transaction.update(
+          docRef,
           {
-            "quatity": FieldValue.increment(-1),
+            "quantity": FieldValue.increment(-1),
           },
         );
       });
-    } on Error catch (e) {
+    } on Exception catch (e) {
       print(e.toString());
     }
   }

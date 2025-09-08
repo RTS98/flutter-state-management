@@ -6,4 +6,5 @@ abstract interface class CartRepository {
   Stream<CartInfo> get stream;
   Future<void> addToCart(Product product);
   Future<void> removeFromCart(CartListItem item);
+  Future<Iterable<CartListItem>> fetchCartItems();
 }

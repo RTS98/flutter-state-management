@@ -76,4 +76,7 @@ class InMemoryCartRepositoryImpl implements CartRepository {
         0,
         (int price, item) => price + item.product.price * item.quantity,
       );
+
+  @override
+  Future<Iterable<CartListItem>> fetchCartItems() async => _items.values;
 }

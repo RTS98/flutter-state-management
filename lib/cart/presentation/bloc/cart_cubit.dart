@@ -53,6 +53,16 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
+  Future<void> fetchCartItems() async {
+    emit(state.copyWith(isProcessing: true));
+    try {
+      final items = await _cartRepository.fetchCartItems();
+      emit(state.copyWith(items: items.toList(), isProcessing: false));
+    } on Exception catch (e) {
+      emit(state.copyWith(error: e, isProcessing: false));
+    }
+  }
+
   void clearError() => emit(state.copyWith(error: null));
 
   // @override
