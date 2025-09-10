@@ -24,13 +24,7 @@ class RemoteCartRepositoryImpl implements CartRepository {
 
     final items = await fetchCartItems();
 
-    _stream.add(
-      CartInfo(
-        items: items.toList(),
-        totalPrice: _calculateTotalPrice(items),
-        cartCount: _calculatateCartCount(items),
-      ),
-    );
+    _addEventToStream(items);
   }
 
   @override
@@ -39,9 +33,21 @@ class RemoteCartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<void> removeFromCart(CartListItem item) {
-    return _cartApiService.removeFromCart(item.product);
+  Future<void> removeFromCart(CartListItem item) async {
+    await _cartApiService.removeFromCart(item.product);
+
+    final items = await fetchCartItems();
+
+    _addEventToStream(items);
   }
+
+  void _addEventToStream(Iterable<CartListItem> items) => _stream.add(
+        CartInfo(
+          items: items.toList(),
+          totalPrice: _calculateTotalPrice(items),
+          cartCount: _calculatateCartCount(items),
+        ),
+      );
 
   int _calculatateCartCount(Iterable<CartListItem> items) => items.fold(
         0,
