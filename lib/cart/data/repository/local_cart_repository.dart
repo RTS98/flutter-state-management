@@ -27,6 +27,7 @@ class LocalCartRepository implements CartRepository {
       await _cartBox.add(
         CartListItem(product: product, quantity: 1),
       );
+      _addEventToStream(_cartBox.values);
       return;
     }
 
@@ -35,6 +36,7 @@ class LocalCartRepository implements CartRepository {
       CartListItem(
           product: product, quantity: cartItems.first.value.quantity + 1),
     );
+    _addEventToStream(_cartBox.values);
   }
 
   @override
@@ -43,7 +45,7 @@ class LocalCartRepository implements CartRepository {
   }
 
   @override
-  Future<void> removeFromCart(CartListItem item) {
+  Future<void> removeFromCart(CartListItem item) async {
     final cartItems = _cartBox
         .toMap()
         .entries
@@ -51,23 +53,44 @@ class LocalCartRepository implements CartRepository {
         .toList();
 
     if (cartItems.isEmpty) {
+      _addEventToStream(_cartBox.values);
       return Future.value(null);
     }
 
     if (cartItems.first.value.quantity == 1) {
-      return _cartBox.delete(cartItems.first.key);
+      await _cartBox.delete(cartItems.first.key);
+      return _addEventToStream(_cartBox.values);
     }
 
-    return _cartBox.put(
+    await _cartBox.put(
       cartItems.first.key,
       CartListItem(
         product: item.product,
         quantity: cartItems.first.value.quantity - 1,
       ),
     );
+    
+    return _addEventToStream(_cartBox.values);
   }
 
   @override
-  // TODO: implement stream
   Stream<CartInfo> get stream => _stream.stream;
+
+  void _addEventToStream(Iterable<CartListItem> items) => _stream.add(
+        CartInfo(
+          items: items.toList(),
+          totalPrice: _calculateTotalPrice(items),
+          cartCount: _calculatateCartCount(items),
+        ),
+      );
+
+  int _calculatateCartCount(Iterable<CartListItem> items) => items.fold(
+        0,
+        (int count, item) => count + item.quantity,
+      );
+
+  int _calculateTotalPrice(Iterable<CartListItem> items) => items.fold(
+        0,
+        (int price, item) => price + item.product.price * item.quantity,
+      );
 }
