@@ -1,30 +1,30 @@
-import 'package:vanilla_state/product_list_item.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
 
-final products = <ProductListItem>[
-  ProductListItem(
+final products = <Product>[
+  Product(
     id: "1",
-    imageUrl: '',
+    // imageUrl: '',
     name: 'Apple',
     description: 'description',
     price: 12,
   ),
-  ProductListItem(
+  Product(
     id: "2",
-    imageUrl: '',
+    // imageUrl: '',
     name: 'Samsung',
     description: 'description',
     price: 10,
   ),
-  ProductListItem(
+  Product(
     id: "3",
-    imageUrl: '',
+    // imageUrl: '',
     name: 'Honor',
     description: 'description',
     price: 15,
   ),
-  ProductListItem(
+  Product(
     id: "4",
-    imageUrl: '',
+    // imageUrl: '',
     name: 'Motorola',
     description: 'description',
     price: 20,

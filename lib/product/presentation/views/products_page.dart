@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:vanilla_state/product_list_item_view.dart';
-import 'package:vanilla_state/products.dart';
+import 'package:vanilla_state/product/domain/models/product.dart';
+import 'package:vanilla_state/product/presentation/widgets/product_list_item_view.dart';
 
 class ProductsPage extends StatelessWidget {
+  final Iterable<Product> products;
+
   const ProductsPage({
+    required this.products,
     super.key,
   });
 
@@ -15,7 +18,7 @@ class ProductsPage extends StatelessWidget {
         child: ListView.builder(
           itemCount: products.length,
           itemBuilder: (_, index) => ProductListItemView(
-            productItem: products[index],
+            productItem: products.elementAt(index),
           ),
         ),
       ),

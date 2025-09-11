@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vanilla_state/cart_cubit.dart';
-import 'package:vanilla_state/cart_page.dart';
-import 'package:vanilla_state/cart_state.dart';
-import 'package:vanilla_state/products_page.dart';
+import 'package:vanilla_state/cart/presentation/bloc/cart_cubit.dart';
+import 'package:vanilla_state/cart/presentation/views/cart_page.dart';
+import 'package:vanilla_state/cart/presentation/bloc/cart_state.dart';
+import 'package:vanilla_state/product/presentation/bloc/product_cubit.dart';
+import 'package:vanilla_state/product/presentation/bloc/product_state.dart';
+import 'package:vanilla_state/product/presentation/views/products_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,10 +20,10 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<CartCubit, CartState>(
+      body: BlocConsumer<ProductCubit, ProductState>(
         listener: (_, state) {
-          if (state.error != null) {
-            final errorMessage = state.error.toString();
+          if (state.exception != null) {
+            final errorMessage = state.exception.toString();
 
             _cartCubit.clearError();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +42,9 @@ class _MainPageState extends State<MainPage> {
 
           return Stack(
             children: <Widget>[
-              const ProductsPage(),
+              ProductsPage(
+                products: state.products,
+              ),
               Positioned(
                 bottom: 50,
                 right: 12,
@@ -57,36 +61,38 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                   onPressed: openCart,
-                  child: Stack(
-                    children: <Widget>[
-                      const Center(
-                        child: Icon(Icons.shopping_cart),
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.pink[500],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 16,
-                            minHeight: 16,
-                          ),
-                          child: Text(
-                            "${state.cartCount}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              decorationThickness: 0,
-                              decoration: TextDecoration.none,
+                  child: BlocBuilder<CartCubit, CartState>(
+                    builder: (_, state) => Stack(
+                      children: <Widget>[
+                        const Center(
+                          child: Icon(Icons.shopping_cart),
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.pink[500],
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            textAlign: TextAlign.center,
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Text(
+                              "${state.cartCount}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                decorationThickness: 0,
+                                decoration: TextDecoration.none,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
