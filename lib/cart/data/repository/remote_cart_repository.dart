@@ -28,9 +28,8 @@ class RemoteCartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Iterable<CartListItem>> fetchCartItems() {
-    return _cartApiService.fetchCartItems();
-  }
+  Future<Iterable<CartListItem>> fetchCartItems() =>
+      _cartApiService.fetchCartItems();
 
   @override
   Future<void> removeFromCart(CartListItem item) async {
