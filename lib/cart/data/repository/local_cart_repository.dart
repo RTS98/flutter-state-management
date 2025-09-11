@@ -17,10 +17,10 @@ class LocalCartRepository implements CartRepository {
 
   @override
   Future<void> addToCart(Product product) async {
-    final cartItems = _cartBox.values.indexed
-        .where(
-          ((int, CartListItem) index) => index.$2.product.id == product.id,
-        )
+    final cartItems = _cartBox
+        .toMap()
+        .entries
+        .where((entry) => entry.value.product.id == product.id)
         .toList();
 
     if (cartItems.isEmpty) {
@@ -31,21 +31,40 @@ class LocalCartRepository implements CartRepository {
     }
 
     await _cartBox.put(
-      cartItems.first.$1,
-      CartListItem(product: product, quantity: cartItems.first.$2.quantity + 1),
+      cartItems.first.key,
+      CartListItem(
+          product: product, quantity: cartItems.first.value.quantity + 1),
     );
   }
 
   @override
   Future<Iterable<CartListItem>> fetchCartItems() async {
-    print(_cartBox.values.toList().first.quantity);
     return _cartBox.values.toList();
   }
 
   @override
   Future<void> removeFromCart(CartListItem item) {
-    // TODO: implement removeFromCart
-    throw UnimplementedError();
+    final cartItems = _cartBox
+        .toMap()
+        .entries
+        .where((entry) => entry.value.product.id == item.product.id)
+        .toList();
+
+    if (cartItems.isEmpty) {
+      return Future.value(null);
+    }
+
+    if (cartItems.first.value.quantity == 1) {
+      return _cartBox.delete(cartItems.first.key);
+    }
+
+    return _cartBox.put(
+      cartItems.first.key,
+      CartListItem(
+        product: item.product,
+        quantity: cartItems.first.value.quantity - 1,
+      ),
+    );
   }
 
   @override
