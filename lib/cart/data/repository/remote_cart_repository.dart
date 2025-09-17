@@ -6,12 +6,12 @@ import 'package:vanilla_state/cart/domain/models/cart_list_item.dart';
 import 'package:vanilla_state/cart/domain/repository/cart_repository.dart';
 import 'package:vanilla_state/product/domain/models/product.dart';
 
-class RemoteCartRepositoryImpl implements CartRepository {
+class RemoteCartRepository implements CartRepository {
   final StreamController<CartInfo> _stream =
       StreamController<CartInfo>.broadcast();
   final CartApiService _cartApiService;
 
-  RemoteCartRepositoryImpl({
+  RemoteCartRepository({
     required CartApiService cartApiService,
   }) : _cartApiService = cartApiService;
 
@@ -20,6 +20,7 @@ class RemoteCartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> addToCart(Product product) async {
+    print("REMOTE");
     await _cartApiService.addToCart(product);
 
     final items = await fetchCartItems();

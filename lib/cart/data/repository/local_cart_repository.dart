@@ -17,6 +17,7 @@ class LocalCartRepository implements CartRepository {
 
   @override
   Future<void> addToCart(Product product) async {
+    print("LOCAL");
     final cartItems = _cartBox
         .toMap()
         .entries
@@ -39,8 +40,10 @@ class LocalCartRepository implements CartRepository {
     _addEventToStream(_cartBox.values);
   }
 
+  //TO DO: Possible change for function signature
   @override
   Future<Iterable<CartListItem>> fetchCartItems() async {
+    _addEventToStream(_cartBox.values);
     return _cartBox.values.toList();
   }
 
