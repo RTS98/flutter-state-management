@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:vanilla_state/cart/data/repository/app_cart_repository.dart';
 import 'package:vanilla_state/cart/data/repository/local_cart_repository.dart';
@@ -31,36 +30,16 @@ Future<void> setupLocator() async {
     },
   );
 
-  getIt.registerSingletonAsync<CartRepository>(() async {
-    final Connectivity connectivity = Connectivity();
-    final connectivityResult = await connectivity.checkConnectivity();
-
-    if (connectivityResult.first == ConnectivityResult.none) {
-      return AppCartRepository(
-        cartRepository: LocalCartRepository(
-          cartBox: hiveService.getCartBox(),
-        ),
-        remoteCartRepository: RemoteCartRepository(
-          cartApiService: CartApiService(),
-        ),
-        localCartRepository: LocalCartRepository(
-          cartBox: hiveService.getCartBox(),
-        ),
-      );
-    }
-
-    return AppCartRepository(
-      cartRepository: RemoteCartRepository(
-        cartApiService: CartApiService(),
-      ),
+  getIt.registerSingletonAsync<CartRepository>(
+    () async => AppCartRepository(
       remoteCartRepository: RemoteCartRepository(
         cartApiService: CartApiService(),
       ),
       localCartRepository: LocalCartRepository(
         cartBox: hiveService.getCartBox(),
       ),
-    );
-  });
+    ),
+  );
 
   await getIt.allReady();
 }
