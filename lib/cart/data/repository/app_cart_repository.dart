@@ -7,42 +7,57 @@ import 'package:vanilla_state/cart/domain/repository/cart_repository.dart';
 import 'package:vanilla_state/product/domain/models/product.dart';
 
 class AppCartRepository implements CartRepository {
-  CartRepository _cartRepository;
+  bool hasInternetConnection = true;
   final RemoteCartRepository _remoteCartRepository;
   final LocalCartRepository _localCartRepository;
   final Connectivity _connectivity = Connectivity();
 
   AppCartRepository({
-    required CartRepository cartRepository,
     required RemoteCartRepository remoteCartRepository,
     required LocalCartRepository localCartRepository,
   })  : _remoteCartRepository = remoteCartRepository,
-        _cartRepository = cartRepository,
         _localCartRepository = localCartRepository {
     _connectivity.onConnectivityChanged.listen((connectivityResult) {
       if (connectivityResult.first == ConnectivityResult.none) {
-        _cartRepository = _localCartRepository;
+        hasInternetConnection = !hasInternetConnection;
         return;
       }
-      _cartRepository = _remoteCartRepository;
+      hasInternetConnection = !hasInternetConnection;
     });
   }
 
   @override
-  Stream<CartInfo> get stream => _cartRepository.stream;
+  Stream<CartInfo> get stream {
+    if(hasInternetConnection) {
+      return _remoteCartRepository.stream;
+    }
+    return _localCartRepository.stream;
+  }
 
   @override
-  Future<void> addToCart(Product product) {
-    return _cartRepository.addToCart(product);
+  Future<void> addToCart(Product product) async {
+    if (hasInternetConnection) {
+      await _remoteCartRepository.addToCart(product);
+    }
+
+    return _localCartRepository.addToCart(product);
   }
 
   @override
   Future<Iterable<CartListItem>> fetchCartItems() {
-    return _cartRepository.fetchCartItems();
+    if (hasInternetConnection) {
+      return _remoteCartRepository.fetchCartItems();
+    }
+
+    return _localCartRepository.fetchCartItems();
   }
 
   @override
-  Future<void> removeFromCart(CartListItem item) {
-    return _cartRepository.removeFromCart(item);
+  Future<void> removeFromCart(CartListItem item) async {
+    if (hasInternetConnection) {
+      await _remoteCartRepository.removeFromCart(item);
+    }
+
+    return _localCartRepository.removeFromCart(item);
   }
 }
