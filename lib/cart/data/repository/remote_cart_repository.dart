@@ -32,7 +32,7 @@ class RemoteCartRepository implements CartRepository {
   Future<Iterable<CartListItem>> fetchCartItems() async {
     final items = await _cartApiService.fetchCartItems();
     _addEventToStream(items);
-    
+
     return items;
   }
 
@@ -43,6 +43,10 @@ class RemoteCartRepository implements CartRepository {
     final items = await fetchCartItems();
 
     _addEventToStream(items);
+  }
+
+  Future<void> addMultipleCartItems(Iterable<CartListItem> items) async {
+    return _cartApiService.addItemsToCart(items);
   }
 
   void _addEventToStream(Iterable<CartListItem> items) => _stream.add(

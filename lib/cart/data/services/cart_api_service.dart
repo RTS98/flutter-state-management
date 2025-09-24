@@ -40,6 +40,32 @@ class CartApiService {
     }
   }
 
+  Future<void> addItemsToCart(Iterable<CartListItem> items) async {
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (final item in items) {
+      final docRef =
+          FirebaseFirestore.instance.collection("cart").doc(item.product.id);
+
+      batch.set(
+        docRef,
+        {
+          'name': item.product.name,
+          'description': item.product.description,
+          'price': item.product.price,
+          'quantity': item.quantity
+        },
+        SetOptions(merge: true),
+      );
+    }
+
+    try {
+      await batch.commit();
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<void> removeFromCart(Product product) async {
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {

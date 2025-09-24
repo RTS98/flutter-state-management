@@ -7,7 +7,7 @@ import 'package:vanilla_state/cart/domain/repository/cart_repository.dart';
 import 'package:vanilla_state/product/domain/models/product.dart';
 
 class AppCartRepository implements CartRepository {
-  bool hasInternetConnection = true;
+  bool hasInternetConnection = false;
   final RemoteCartRepository _remoteCartRepository;
   final LocalCartRepository _localCartRepository;
   final Connectivity _connectivity = Connectivity();
@@ -23,12 +23,14 @@ class AppCartRepository implements CartRepository {
         return;
       }
       hasInternetConnection = !hasInternetConnection;
+      //TO DO: Solve Firebase.initializeApp() issue
+      sync();
     });
   }
 
   @override
   Stream<CartInfo> get stream {
-    if(hasInternetConnection) {
+    if (hasInternetConnection) {
       return _remoteCartRepository.stream;
     }
     return _localCartRepository.stream;
@@ -44,13 +46,8 @@ class AppCartRepository implements CartRepository {
   }
 
   @override
-  Future<Iterable<CartListItem>> fetchCartItems() {
-    if (hasInternetConnection) {
-      return _remoteCartRepository.fetchCartItems();
-    }
-
-    return _localCartRepository.fetchCartItems();
-  }
+  Future<Iterable<CartListItem>> fetchCartItems() =>
+      _localCartRepository.fetchCartItems();
 
   @override
   Future<void> removeFromCart(CartListItem item) async {
@@ -59,5 +56,11 @@ class AppCartRepository implements CartRepository {
     }
 
     return _localCartRepository.removeFromCart(item);
+  }
+
+  Future<void> sync() async {
+    final items = await _localCartRepository.fetchCartItems();
+
+    return _remoteCartRepository.addMultipleCartItems(items);
   }
 }

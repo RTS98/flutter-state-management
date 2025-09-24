@@ -16,6 +16,7 @@ class LocalCartRepository implements CartRepository {
   }) : _cartBox = cartBox;
 
   @override
+  //TODO: Check why UI is not updated
   Future<void> addToCart(Product product) async {
     print("LOCAL");
     final cartItems = _cartBox
